@@ -1,0 +1,36 @@
+# base image with installed jvm
+FROM eclipse-temurin:21 AS base
+
+ARG SOLVER
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      ca-certificates curl unzip python3 pip && \
+    rm -rf /var/lib/apt/lists/*
+
+# install ostrich2
+RUN if [ "$SOLVER" = "ostrich2" ]; then \
+      # sbt install dark magic
+      echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list; \
+      echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list; \
+      curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | tee /etc/apt/trusted.gpg.d/sbt.asc; \
+      apt-get update; \
+      apt-get install sbt; \
+      set -ex; \
+      curl -L -o /tmp/ostrich2.zip "https://github.com/uuverifiers/ostrich/releases/download/v2.0.1/ostrich-2.0.1.zip"; \
+      if [ -s /tmp/ostrich2.zip ]; then \
+        mkdir -p /opt/ && unzip /tmp/ostrich2.zip -d /opt/; \
+        rm -rf /tmp/ostrich2.zip; \
+      fi \
+    fi
+
+# install ostrich1.4
+RUN if [ "$SOLVER" = "ostrich" ]; then \
+      set -ex; \
+      curl -L -o /tmp/ostrich.tar.gz "https://github.com/uuverifiers/ostrich/releases/download/v1.4smtcomp/ostrich-2024.tar.gz"; \
+      if [ -s /tmp/ostrich.tar.gz ]; then \
+        # tar -x extract -z decompress using gzip -f filename -C target folder
+        mkdir -p /opt/ostrich/ && tar -xzf /tmp/ostrich.tar.gz -C /opt/ostrich/; \
+        rm -rf /tmp/ostrich.zip; \
+      fi \
+    fi

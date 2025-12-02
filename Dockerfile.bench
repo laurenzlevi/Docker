@@ -1,0 +1,30 @@
+# Build arg determines which solver base image to use
+ARG BASE
+FROM $BASE AS base
+
+ARG LOGIC
+ARG SOLVER_CMD
+ARG OUT_FILE
+
+ENV RUNTIME_SOLVER=$SOLVER_CMD
+ENV RUNTIME_LOGIC=$LOGIC
+ENV OUT=$OUT_FILE
+
+# creater folder structure for runner
+RUN mkdir -p /opt/app/runner/; \
+  mkdir -p /opt/app/runner/smt-benchmark/QF_S; \
+  mkdir /opt/app/runner/smt-benchmark/QF_SLIA; \
+  mkdir /opt/app/runner/smt-benchmark/QF_SNIA; \
+  mkdir /opt/app/runner/results/;
+
+# copy runner script
+COPY solve.py /opt/app/runner/
+
+# copy smt-benchmark
+COPY /smt-benchmark/$LOGIC/ /opt/app/runner/smt-benchmark/
+
+# change working dir (needed so python script finds the files relative to its location)
+WORKDIR /opt/app/runner/
+
+# set entrypoint
+ENTRYPOINT python3 /opt/app/runner/solve.py --solver_cmd "$RUNTIME_SOLVER" --out $OUT.json

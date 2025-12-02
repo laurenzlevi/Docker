@@ -1,0 +1,79 @@
+# minimal base image
+FROM ubuntu:24.04 AS base
+
+ARG SOLVER
+
+# install tools needed for setup
+# - curl for downloading solvers
+# - unzip for unpacking solvers
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      ca-certificates curl unzip git g++ make cmake python3 pip && \
+    rm -rf /var/lib/apt/lists/*
+
+# install cvc5
+RUN if [ "$SOLVER" = "cvc5" ]; then \
+      # -e (exit on failed command) -x (print command before execution)
+      set -ex; \
+      # curl -L (follow redirects) -o (write output into specified file)
+      curl -L -o /tmp/cvc5.zip "https://github.com/cvc5/cvc5/releases/download/cvc5-1.3.1/cvc5-Linux-x86_64-static.zip"; \
+      # check if file exists and is not empty
+      if [ -s /tmp/cvc5.zip ]; then \
+        # create new dir including parents if they do not already exist
+        mkdir -p /opt/ && unzip /tmp/cvc5.zip -d /opt/; \
+        # install cvc5 and set permissions using -m 0755 owner can read, write and execute, everyone else can read and execute
+        install -m 0755 /opt/cvc5-Linux-x86_64-static/bin/cvc5 /usr/local/bin/cvc5; \
+        # remove temporary install directories
+        rm -rf /tmp/cvc5.zip /opt/cvc5-Linux-x86_64-static; \
+      fi \
+    fi
+
+# install z3
+RUN if [ "$SOLVER" = "z3" ]; then \
+      set -ex; \
+      curl -L -o /tmp/z3.zip "https://github.com/Z3Prover/z3/releases/download/z3-4.15.4/z3-4.15.4-x64-glibc-2.39.zip"; \
+      if [ -s /tmp/z3.zip ]; then \
+        mkdir -p /opt/ && unzip /tmp/z3.zip -d /opt/; \
+        install -m 0755 /opt/z3-4.15.4-x64-glibc-2.39/bin/z3 /usr/local/bin/z3; \
+        rm -rf /tmp/z3.zip /opt/z3-4.15.4-x64-glibc-2.39; \
+      fi \
+    fi
+
+# install noodler
+RUN if [ "$SOLVER" = "z3-noodler" ]; then \
+      set -ex; \
+      mkdir -p /opt/; \
+      cd /opt/; \
+      git clone 'https://github.com/VeriFIT/mata.git'; \
+      cd mata; \
+      make release; \
+      make install; \
+      cd ..; \
+      git clone 'https://github.com/VeriFIT/z3-noodler.git'; \
+      mkdir z3-noodler/build; \
+      cd z3-noodler/build; \
+      cmake -DCMAKE_BULD_TYPE=Release ..; \
+      make; \
+      install -m 0755 /opt/z3-noodler/build/z3 /usr/local/bin/z3; \
+    fi
+
+RUN if [ "$SOLVER" = "z3str4" ]; then \
+      set -ex; \
+      mkdir -p /opt/ & cd /opt/; \
+      git clone "https://github.com/z3str4/z3str4.github.io.git"; \
+      if [ -s /opt/z3str4.github.io/z3str4.tar.gz ]; then \
+        # tar -x extract -z decompress using gzip -f filename -C target folder
+        tar -xzf /opt/z3str4.github.io/z3str4.tar.gz -C /opt/; \
+        # build z3str4
+        cd z3str4; \
+        mkdir -p build; \
+        cd build; \
+        cmake ../; \
+        make -j4; \
+        # install
+        install -m 0755 /opt/z3str4/build/z3 /usr/local/bin/z3; \
+        # remove build files
+        cd /opt/; \
+        rm -rf /opt/z3str4/; \
+      fi \
+    fi
