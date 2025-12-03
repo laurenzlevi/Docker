@@ -27,4 +27,4 @@ COPY /smt-benchmark/$LOGIC/ /opt/app/runner/smt-benchmark/
 WORKDIR /opt/app/runner/
 
 # set entrypoint
-ENTRYPOINT python3 /opt/app/runner/solve.py --solver_cmd "$RUNTIME_SOLVER" --out $OUT.json
+ENTRYPOINT python3 /opt/app/runner/solve.py --solver_cmd "$RUNTIME_SOLVER" --out $OUT
