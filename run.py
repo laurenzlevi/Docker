@@ -8,9 +8,9 @@ logics = [
         'py-conbyte-z3str',
         'qf-s-nia',
         'qf-slia',
-        'Reynolds-kazula',
-        'Reynolds-pyex-z3-td',
-        'Reynolds-pyex-zz'
+        'reynolds-kazula',
+        'reynolds-pyex-z3-td',
+        'reynolds-pyex-zz'
     ]
 
 solvers = {
@@ -24,13 +24,14 @@ solvers = {
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('solver')
-    parser.add_argument('mount')
+    parser.add_argument('--solver')
+    parser.add_argument('--mount')
     args = parser.parse_args()
 
-    for logic in logics:
-        subprocess.run([
-            'docker', 'run', 
-            '-v', f'{args.mount}:/opt/app/runner/results/',
-            f'{args.solver}-{logic}:latest'
-        ])
+    for solver in solvers:
+        for logic in logics:
+            subprocess.run([
+                'docker', 'run', 
+                '-v', f'{args.mount}:/opt/app/runner/results/',
+                f'{args.solver}-{logic}:latest'
+            ])

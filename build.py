@@ -13,27 +13,27 @@ logics = [
     ]
 
 solvers = [
-    # ('cvc5', 'cvc5'),
-    # ('z3', 'z3'),
-    # ('z3-noodler', 'z3'),
+    ('cvc5', 'cvc5'),
+    ('z3', 'z3'),
+    ('z3-noodler', 'z3'),
     ('z3str4', 'z3')
 ]
 
 solvers_java = [
-    # ('ostrich2', 'java -jar /opt/ostrich-2.0.1/target/scala-2.11/ostrich-assembly-2.0.1.jar'),
-    # ('ostrich', 'java -jar /opt/ostrich/target/scala-2.13/ostrich-assembly-1.4smtcomp.jar')
+    ('ostrich2', 'java -jar /opt/ostrich-2.0.1/target/scala-2.11/ostrich-assembly-2.0.1.jar'),
+    ('ostrich', 'java -jar /opt/ostrich/target/scala-2.13/ostrich-assembly-1.4smtcomp.jar')
 ]
 
 if __name__ == "__main__":
     # builder solver base images
     for solver, solver_cmd in solvers:
-        subprocess.run([
-            'docker', 'build', 
-            '-t', f'{solver}-base:latest', 
-            '-f', 'Dockerfile.solver', 
-            '--build-arg', f'SOLVER={solver}',
-            '.'
-        ])
+            subprocess.run([
+                'docker', 'build', 
+                '-t', f'{solver}-base:latest', 
+                '-f', 'Dockerfile.solver', 
+                '--build-arg', f'SOLVER={solver}',
+                '.'
+            ])
 
     for solver, solver_cmd in solvers_java:
         subprocess.run([
