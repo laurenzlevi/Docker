@@ -28,10 +28,9 @@ if __name__ == "__main__":
     parser.add_argument('--mount')
     args = parser.parse_args()
 
-    for solver in solvers:
-        for logic in logics:
-            subprocess.run([
-                'docker', 'run', 
-                '-v', f'{args.mount}:/opt/app/runner/results/',
-                f'{args.solver}-{logic}:latest'
-            ])
+    for logic in logics:
+        subprocess.run([
+            'docker', 'run', 
+            '-v', f'{args.mount}:/opt/app/runner/results/',
+            f'{args.solver}-{logic}:latest'
+        ])
