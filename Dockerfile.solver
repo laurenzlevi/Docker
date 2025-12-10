@@ -44,7 +44,7 @@ RUN if [ "$SOLVER" = "z3-noodler" ]; then \
       set -ex; \
       mkdir -p /opt/; \
       cd /opt/; \
-      git clone 'https://github.com/VeriFIT/mata.git'; \
+      git clone --depth 1 --branch 1.24.0 'https://github.com/VeriFIT/mata.git'; \
       cd mata; \
       make release; \
       make install; \
