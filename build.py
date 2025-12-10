@@ -1,20 +1,22 @@
 import subprocess
 
 logics = [
-    ('py-conbyte-cvc4', 'py-conbyte-cvc4'),
-    ('py-conbyte-trauc', 'py-conbyte-trauc'),
-    ('py-conbyte-z3seq', 'py-conbyte-z3seq'),
-    ('py-conbyte-z3str', 'py-conbyte-z3str'),
-    ('QF_S_NIA', 'qf-s-nia'),
-    ('QF_SLIA', 'qf-slia'),
-    ('Reynolds-kazula', 'reynolds-kazula'),
-    ('Reynolds-pyex-z3-td', 'reynolds-pyex-z3-td'),
-    ('Reynolds-pyex-zz', 'reynolds-pyex-zz')
-]
+        ('py-conbyte-cvc4', 'py-conbyte-cvc4'),
+        ('py-conbyte-trauc', 'py-conbyte-trauc'),
+        ('py-conbyte-z3seq', 'py-conbyte-z3seq'),
+        ('py-conbyte-z3str', 'py-conbyte-z3str'),
+        ('QF_S_NIA', 'qf-s-nia'),
+        ('QF_SLIA', 'qf-slia'),
+        ('Reynolds-kazula', 'reynolds-kazula'),
+        ('Reynolds-pyex-z3-td', 'reynolds-pyex-z3-td'),
+        ('Reynolds-pyex-zz', 'reynolds-pyex-zz')
+    ]
 
 solvers = [
     ('cvc5', 'cvc5'),
-    ('z3', 'z3')
+    ('z3', 'z3'),
+    ('z3-noodler', 'z3'),
+    ('z3str4', 'z3')
 ]
 
 solvers_java = [
