@@ -122,7 +122,7 @@ if __name__ == "__main__":
             for filename in files:
                 print(f"Solving {root}/{filename}")
 
-                result = solve(os.path.join(root, filename), args.solver_cmd.split(' '))
+                result = solve(os.path.join(root, filename), args.solver_cmd.split(' '), 60.0)
 
                 data[logic][suit][os.path.join(root, filename).split(suit)[1]] = result
 
