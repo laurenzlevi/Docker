@@ -4,7 +4,7 @@ import os
 import argparse
 import json
 
-def solve(file_path, solver_cmd, timeout=60.0):
+def solve(file_path, solver_cmd, timeout=300.0):
     try:
         start_time = time.time()
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     parser.add_argument('--logic')
     args = parser.parse_args()
                         
-    print(f'Running {args.solver_cmd}')
+    print(args)
     
     benchmarks = {
         'py-conbyte-cvc4' : ["QF_SLIA/2019-full_str_int"],
@@ -122,7 +122,7 @@ if __name__ == "__main__":
             for filename in files:
                 print(f"Solving {root}/{filename}")
 
-                result = solve(os.path.join(root, filename), args.solver_cmd.split(' '), 60.0)
+                result = solve(os.path.join(root, filename), args.solver_cmd.split(' '), 300.0)
 
                 data[logic][suit][os.path.join(root, filename).split(suit)[1]] = result
 
