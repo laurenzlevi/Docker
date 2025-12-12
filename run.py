@@ -19,7 +19,7 @@ solvers = {
     'z3-noodler': 'z3',
     'z3str4': 'z3',
     'ostrich2': '"java -jar /opt/ostrich-2.0.1/target/scala-2.11/ostrich-assembly-2.0.1.jar -version"',
-    'ostrich': '"java -jar /opt/ostrich-2.0.1/target/scala-2.11/ostrich-assembly-2.0.1.jar -version"'
+    'ostrich': '"java -jar /opt/ostrich/target/scala-2.13/ostrich-assembly-1.4smtcomp.jar -version"'
 }
 
 if __name__ == "__main__":
